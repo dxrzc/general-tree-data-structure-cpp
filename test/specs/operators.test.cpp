@@ -16,7 +16,7 @@ TEST_CASE_FIXTURE(LifecycleCounterFixture, "asssigment operator(move)")
     {
         general_tree<int> gt;
         general_tree<int> gt2;
-        gt = gt2;
+        gt = std::move(gt2);
         gt.clear();
         gt2.clear();
     }
