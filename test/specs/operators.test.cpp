@@ -3,6 +3,113 @@
 #include "utils/fixtures/lifecycle-counter.fixture.h"
 #include "utils/helpers/seed-tree.h"
 
+TEST_CASE_FIXTURE(LifecycleCounterFixture, "asssigment operator(move)")
+{
+    SUBCASE("no error in self-assigning")
+    {
+        general_tree<int> gt(1);
+        gt = std::move(gt);
+        REQUIRE_EQ(gt.root().data(), 1);
+    }
+
+    SUBCASE("no error if both tree are empty")
+    {
+        general_tree<int> gt;
+        general_tree<int> gt2;
+        gt = gt2;
+        gt.clear();
+        gt2.clear();
+    }
+
+    SUBCASE("current tree should remain empty if other tree is empty")
+    {
+        general_tree<LifecycleCounter> gt = seed_tree(3);
+        general_tree<LifecycleCounter> other;
+
+        gt = std::move(other);
+
+        REQUIRE(gt.empty());
+    }
+
+    SUBCASE("other tree should remain empty after operation")
+    {
+        general_tree<LifecycleCounter> other = seed_tree(3);
+        general_tree<LifecycleCounter> gt;
+
+        gt = std::move(other);
+
+        REQUIRE(other.empty());
+    }
+
+    SUBCASE("should not make any copies or moves")
+    {
+        general_tree<LifecycleCounter> other = seed_tree(3);
+        general_tree<LifecycleCounter> gt;
+
+        gt = std::move(other);
+
+        REQUIRE_EQ(LifecycleCounter::copy_constructor_calls, 0);
+        REQUIRE_EQ(LifecycleCounter::move_constructor_calls, 0);
+    }
+
+    SUBCASE("previous elements should be destroyed")
+    {
+        std::size_t gt_size = 9;
+        general_tree<LifecycleCounter> gt = seed_tree(gt_size);
+        general_tree<LifecycleCounter> gt2;
+
+        gt = std::move(gt2);
+
+        REQUIRE_EQ(LifecycleCounter::destructor_calls, 9);
+    }
+
+    SUBCASE("tree should contain the same elements as the other tree before move")
+    {
+        general_tree<LifecycleCounter> other = seed_tree(9);
+        auto other_backup = other;
+        general_tree<LifecycleCounter> gt;
+
+        gt = std::move(other);
+
+        REQUIRE_EQ(gt, other_backup);
+    }
+
+    SUBCASE("inserting new elements in other tree is safe after operation")
+    {
+        general_tree<LifecycleCounter> other = seed_tree(3);
+        general_tree<LifecycleCounter> gt;
+        gt = std::move(other);
+
+        REQUIRE(other.empty());
+
+        // 4 insertions
+        other.emplace_root("string", 0);
+        other.emplace_left_child(other.root(), "string99", 99);
+        other.emplace_left_child(other.root().left_child(), "string100", 100);
+        other.emplace_left_child(other.root().left_child(), "string101", 101);
+        other.clear();
+
+        REQUIRE_EQ(LifecycleCounter::destructor_calls, 4);
+    }
+
+    SUBCASE("inserting new elements in current tree is safe after operation")
+    {
+        std::size_t other_tree_size = 9;
+        general_tree<LifecycleCounter> other = seed_tree(other_tree_size);
+        general_tree<LifecycleCounter> gt;
+        gt = std::move(other);
+
+        // 4 insertions
+        gt.emplace_left_child(gt.root().left_child(), "string", 100);
+        gt.emplace_left_child(gt.root().left_child().right_sibling(), "string", 100);
+        gt.emplace_right_sibling(gt.root().left_child(), "string", 100);
+        gt.emplace_left_child(gt.root().left_child().left_child(), "string", 100);
+        gt.clear();
+
+        REQUIRE_EQ(LifecycleCounter::destructor_calls, other_tree_size + 4);
+    }
+}
+
 TEST_CASE_FIXTURE(LifecycleCounterFixture, "assigment operator")
 {
     SUBCASE("no error in self-assigning")
