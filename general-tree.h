@@ -340,6 +340,17 @@ public:
         return *this;
     }
 
+    general_tree& operator=(general_tree&& other)
+    {
+        if (this != &other)
+        {
+            clear();
+            m_root = other.m_root;
+            other.m_root = nullptr;
+        }
+        return *this;
+    }
+
     bool operator==(const general_tree<T>& other) const
     {
         if (m_root == other.m_root)
