@@ -95,6 +95,7 @@ private:
             while (child_original != nullptr)
             {
                 private_node* child_copy = new private_node(child_original->m_data);
+                child_copy->m_parent = copied_node;
 
                 // if it is the first copied child, it goes as left child
                 if (prev_copied_child == nullptr)
@@ -134,6 +135,8 @@ public:
          */
         [[nodiscard]] node left_child() const noexcept
         {
+            if (!m_node)
+                return nullptr;
             return m_node->m_left_child;
         }
 
@@ -143,6 +146,8 @@ public:
          */
         [[nodiscard]] node parent() const noexcept
         {
+            if (!m_node)
+                return nullptr;
             return m_node->m_parent;
         }
 
@@ -152,6 +157,8 @@ public:
          */
         [[nodiscard]] node right_sibling() const noexcept
         {
+            if (!m_node)
+                return nullptr;
             return m_node->m_right_sibling;
         }
 
@@ -183,6 +190,8 @@ public:
          */
         bool is_root() const noexcept
         {
+            if (!m_node)
+                return false;
             return m_node->m_parent == nullptr;
         }
 
@@ -192,6 +201,8 @@ public:
          */
         bool is_leaf() const noexcept
         {
+            if (!m_node)
+                return false;
             return m_node->m_left_child == nullptr;
         }
 
@@ -201,6 +212,8 @@ public:
          */
         bool has_right_sibling() const noexcept
         {
+            if (!m_node)
+                return false;
             return m_node->m_right_sibling != nullptr;
         }
 
@@ -210,6 +223,8 @@ public:
          */
         bool has_left_child() const noexcept
         {
+            if (!m_node)
+                return false;
             return m_node->m_left_child != nullptr;
         }
 
@@ -292,7 +307,7 @@ public:
         [[nodiscard]] std::size_t descendants_count() const
         {
             if (m_node == nullptr)
-                throw std::invalid_argument("Cannot get height of null node");
+                throw std::invalid_argument("Cannot get descendants_count of null node");
 
             std::size_t count = 0;
             std::queue<private_node*> q;
@@ -317,6 +332,11 @@ public:
 
     general_tree() noexcept : m_root(nullptr) {}
 
+    ~general_tree()
+    {
+        clear();
+    }
+
     general_tree(general_tree<T>&& rhs) noexcept : m_root(std::exchange(rhs.m_root, nullptr)) {}
 
     general_tree(const general_tree<T>& other) : general_tree<T>()
@@ -340,7 +360,7 @@ public:
         return *this;
     }
 
-    general_tree& operator=(general_tree&& other)
+    general_tree& operator=(general_tree&& other) noexcept
     {
         if (this != &other)
         {
