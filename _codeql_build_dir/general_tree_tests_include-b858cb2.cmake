@@ -1,5 +1,0 @@
-if(EXISTS "/home/runner/work/general-tree-cxx/general-tree-cxx/_codeql_build_dir/general_tree_tests_tests-b858cb2.cmake")
-  include("/home/runner/work/general-tree-cxx/general-tree-cxx/_codeql_build_dir/general_tree_tests_tests-b858cb2.cmake")
-else()
-  add_test(general_tree_tests_NOT_BUILT-b858cb2 general_tree_tests_NOT_BUILT-b858cb2)
-endif()
