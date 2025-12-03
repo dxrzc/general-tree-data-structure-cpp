@@ -599,4 +599,9 @@ public:
 
         delete_from_node(n.m_node->m_left_child);
     }
+
+    ~general_tree()
+    {
+        clear();
+    }
 };
