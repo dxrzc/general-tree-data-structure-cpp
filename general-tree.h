@@ -95,6 +95,7 @@ private:
             while (child_original != nullptr)
             {
                 private_node* child_copy = new private_node(child_original->m_data);
+                child_copy->m_parent = copied_node;
 
                 // if it is the first copied child, it goes as left child
                 if (prev_copied_child == nullptr)
