@@ -95,6 +95,7 @@ private:
             while (child_original != nullptr)
             {
                 private_node* child_copy = new private_node(child_original->m_data);
+                child_copy->m_parent = copied_node;
 
                 // if it is the first copied child, it goes as left child
                 if (prev_copied_child == nullptr)
@@ -292,7 +293,7 @@ public:
         [[nodiscard]] std::size_t descendants_count() const
         {
             if (m_node == nullptr)
-                throw std::invalid_argument("Cannot get height of null node");
+                throw std::invalid_argument("Cannot get descendants count of null node");
 
             std::size_t count = 0;
             std::queue<private_node*> q;
@@ -340,7 +341,7 @@ public:
         return *this;
     }
 
-    general_tree& operator=(general_tree&& other)
+    general_tree& operator=(general_tree&& other) noexcept
     {
         if (this != &other)
         {
@@ -598,5 +599,10 @@ public:
             throw std::invalid_argument("Can not delete left child of null node");
 
         delete_from_node(n.m_node->m_left_child);
+    }
+
+    ~general_tree()
+    {
+        clear();
     }
 };
