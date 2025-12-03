@@ -292,7 +292,7 @@ public:
         [[nodiscard]] std::size_t descendants_count() const
         {
             if (m_node == nullptr)
-                throw std::invalid_argument("Cannot get height of null node");
+                throw std::invalid_argument("Cannot get descendants count of null node");
 
             std::size_t count = 0;
             std::queue<private_node*> q;
@@ -340,7 +340,7 @@ public:
         return *this;
     }
 
-    general_tree& operator=(general_tree&& other)
+    general_tree& operator=(general_tree&& other) noexcept
     {
         if (this != &other)
         {
