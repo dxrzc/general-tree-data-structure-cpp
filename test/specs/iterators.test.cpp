@@ -31,6 +31,18 @@ TEST_CASE("general_tree::iterator")
 
             REQUIRE_EQ(expected_result, traversal);
         }
+
+        SUBCASE("postorder traversal")
+        {
+            const auto it_type = general_tree<int>::iteration_type::postorder;
+            const std::vector<int> expected_result = {4, 5, 2, 6, 3, 1};
+
+            std::vector<int> traversal;
+            for (auto it = mytree.begin(it_type); it != mytree.end(); ++it)
+                traversal.push_back(*it);
+
+            REQUIRE_EQ(expected_result, traversal);
+        }
     }
 
     SUBCASE("single node")
@@ -44,6 +56,18 @@ TEST_CASE("general_tree::iterator")
         SUBCASE("preorder traversal")
         {
             const auto it_type = general_tree<int>::iteration_type::preorder;
+            const std::vector<int> expected_result = {1};
+
+            std::vector<int> traversal;
+            for (auto it = mytree.begin(it_type); it != mytree.end(); ++it)
+                traversal.push_back(*it);
+
+            REQUIRE_EQ(expected_result, traversal);
+        }
+
+        SUBCASE("postorder traversal")
+        {
+            const auto it_type = general_tree<int>::iteration_type::postorder;
             const std::vector<int> expected_result = {1};
 
             std::vector<int> traversal;
@@ -82,6 +106,18 @@ TEST_CASE("general_tree::iterator")
 
             REQUIRE_EQ(expected_result, traversal);
         }
+
+        SUBCASE("postorder traversal")
+        {
+            const auto it_type = general_tree<int>::iteration_type::postorder;
+            const std::vector<int> expected_result = {4, 3, 2, 1};
+
+            std::vector<int> traversal;
+            for (auto it = mytree.begin(it_type); it != mytree.end(); ++it)
+                traversal.push_back(*it);
+
+            REQUIRE_EQ(expected_result, traversal);
+        }
     }
 
     SUBCASE("wide siblings")
@@ -102,6 +138,18 @@ TEST_CASE("general_tree::iterator")
         {
             const auto it_type = general_tree<int>::iteration_type::preorder;
             const std::vector<int> expected_result = {1, 2, 3, 4, 5};
+
+            std::vector<int> traversal;
+            for (auto it = mytree.begin(it_type); it != mytree.end(); ++it)
+                traversal.push_back(*it);
+
+            REQUIRE_EQ(expected_result, traversal);
+        }
+
+        SUBCASE("postorder traversal")
+        {
+            const auto it_type = general_tree<int>::iteration_type::postorder;
+            const std::vector<int> expected_result = {2, 3, 4, 5, 1};
 
             std::vector<int> traversal;
             for (auto it = mytree.begin(it_type); it != mytree.end(); ++it)
@@ -142,6 +190,18 @@ TEST_CASE("general_tree::iterator")
 
             REQUIRE_EQ(expected_result, traversal);
         }
+
+        SUBCASE("postorder traversal")
+        {
+            const auto it_type = general_tree<int>::iteration_type::postorder;
+            const std::vector<int> expected_result = {4, 2, 6, 5, 3, 1};
+
+            std::vector<int> traversal;
+            for (auto it = mytree.begin(it_type); it != mytree.end(); ++it)
+                traversal.push_back(*it);
+
+            REQUIRE_EQ(expected_result, traversal);
+        }
     }
 
     SUBCASE("multiple sibling subtrees")
@@ -167,6 +227,18 @@ TEST_CASE("general_tree::iterator")
         {
             const auto it_type = general_tree<int>::iteration_type::preorder;
             const std::vector<int> expected_result = {1, 2, 4, 5, 3, 6, 7};
+
+            std::vector<int> traversal;
+            for (auto it = mytree.begin(it_type); it != mytree.end(); ++it)
+                traversal.push_back(*it);
+
+            REQUIRE_EQ(expected_result, traversal);
+        }
+
+        SUBCASE("postorder traversal")
+        {
+            const auto it_type = general_tree<int>::iteration_type::postorder;
+            const std::vector<int> expected_result = {4, 5, 2, 6, 7, 3, 1};
 
             std::vector<int> traversal;
             for (auto it = mytree.begin(it_type); it != mytree.end(); ++it)
