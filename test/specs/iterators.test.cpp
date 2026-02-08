@@ -176,3 +176,14 @@ TEST_CASE("general_tree::iterator")
         }
     }
 }
+
+TEST_CASE("general_tree::const_iterator")
+{
+    SUBCASE("for each with const tree")
+    {
+        const general_tree<int> tree(1);
+        for (int v : tree)
+        {
+        }
+    }
+}
