@@ -70,6 +70,7 @@ private:
             switch (it_type)
             {
             case iteration_type::preorder:
+            {
                 if (m_ptr->m_left_child != nullptr)
                     m_ptr = m_ptr->m_left_child;
                 else if (m_ptr->m_right_sibling != nullptr)
@@ -83,7 +84,20 @@ private:
                     if (m_ptr != nullptr)
                         m_ptr = m_ptr->m_right_sibling;
                 }
-                return;
+                break;
+            }
+            case iteration_type::postorder:
+            {
+                if (m_ptr->m_right_sibling != nullptr)
+                {
+                    m_ptr = m_ptr->m_right_sibling;
+                    while (m_ptr->m_left_child != nullptr)
+                        m_ptr = m_ptr->m_left_child;
+                }
+                else
+                    m_ptr = m_ptr->m_parent;
+                break;
+            }
             }
         }
 
