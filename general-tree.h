@@ -717,4 +717,25 @@ public:
     {
         return iterator(nullptr);
     }
+
+    [[nodiscard]] const_iterator begin(iteration_type it_type = iteration_type::preorder) const
+    {
+        private_node* pnode = get_initial_node_for_iteration(it_type);
+        return const_iterator(pnode, it_type);
+    }
+
+    [[nodiscard]] const_iterator end() const
+    {
+        return const_iterator(nullptr);
+    }
+
+    [[nodiscard]] const_iterator cbegin(iteration_type it_type = iteration_type::preorder) const
+    {
+        return begin();
+    }
+
+    [[nodiscard]] const_iterator cend() const
+    {
+        return end();
+    }
 };
