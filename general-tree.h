@@ -37,6 +37,14 @@ private:
         {
         case iteration_type::preorder:
             return m_root;
+        case iteration_type::postorder:
+        {
+            private_node* current = m_root;
+            while (current->m_left_child != nullptr)
+                current = current->m_left_child;
+            return current;
+            break;
+        }
         default:
             throw std::invalid_argument("Not implemented");
         }
@@ -62,6 +70,7 @@ private:
             switch (it_type)
             {
             case iteration_type::preorder:
+            {
                 if (m_ptr->m_left_child != nullptr)
                     m_ptr = m_ptr->m_left_child;
                 else if (m_ptr->m_right_sibling != nullptr)
@@ -75,7 +84,20 @@ private:
                     if (m_ptr != nullptr)
                         m_ptr = m_ptr->m_right_sibling;
                 }
-                return;
+                break;
+            }
+            case iteration_type::postorder:
+            {
+                if (m_ptr->m_right_sibling != nullptr)
+                {
+                    m_ptr = m_ptr->m_right_sibling;
+                    while (m_ptr->m_left_child != nullptr)
+                        m_ptr = m_ptr->m_left_child;
+                }
+                else
+                    m_ptr = m_ptr->m_parent;
+                break;
+            }
             }
         }
 
