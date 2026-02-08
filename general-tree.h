@@ -25,6 +25,104 @@ private:
         }
     };
 
+    enum class iteration_type
+    {
+        postorder,
+        preorder
+    };
+
+    private_node* get_initial_node_for_iteration(iteration_type it_type)
+    {
+        switch (it_type)
+        {
+        case iteration_type::preorder:
+            return m_root;
+        default:
+            throw std::invalid_argument("Not implemented");
+        }
+    }
+
+    template <bool is_const>
+    class general_tree_iterator
+    {
+    public:
+        using iterator_category = std::forward_iterator_tag;
+        using value_type = T;
+        using difference_type = std::ptrdiff_t;
+
+    private:
+        using node_ptr = std::conditional_t<is_const, const private_node*, private_node*>;
+        using reference = std::conditional_t<is_const, const T&, T&>;
+        using pointer = std::conditional_t<is_const, const T*, T*>;
+        node_ptr m_ptr;
+        iteration_type m_iteration_type;
+
+        void move_to_the_next_node(iteration_type it_type)
+        {
+            switch (it_type)
+            {
+            case iteration_type::preorder:
+                if (m_ptr->m_left_child != nullptr)
+                    m_ptr = m_ptr->m_left_child;
+                else if (m_ptr->m_right_sibling != nullptr)
+                    m_ptr = m_ptr->m_right_sibling;
+                else
+                {
+                    // it goes up until it finds either a right sibling or nullptr
+                    m_ptr = m_ptr->m_parent;
+                    while (m_ptr != nullptr && m_ptr->m_right_sibling == nullptr)
+                        m_ptr = m_ptr->m_parent;
+                    if (m_ptr != nullptr)
+                        m_ptr = m_ptr->m_right_sibling;
+                }
+                return;
+            }
+        }
+
+    public:
+        explicit general_tree_iterator(
+            private_node* node_ptr = nullptr, iteration_type it_type = iteration_type::preorder
+        )
+            : m_ptr(node_ptr), m_iteration_type(it_type)
+        {
+        }
+
+        general_tree_iterator& operator++()
+        {
+            move_to_the_next_node(m_iteration_type);
+            return *this;
+        }
+
+        general_tree_iterator operator++(int)
+        {
+            auto aux = *this;
+            move_to_the_next_node(m_iteration_type);
+            return aux;
+        }
+
+        [[nodiscard]] reference operator*() const
+        {
+            return m_ptr->m_data;
+        }
+
+        [[nodiscard]] bool operator==(const general_tree_iterator& other)
+        {
+            return m_ptr == other.m_ptr;
+        }
+
+        // fixes reversed lookup ambiguity
+        [[nodiscard]] bool operator!=(const general_tree_iterator& other)
+        {
+            return m_ptr != other.m_ptr;
+        }
+
+        operator general_tree_iterator<true>() const
+            requires(!is_const)
+        {
+            return general_tree_iterator<true>(m_ptr);
+        }
+    };
+
     private_node* m_root;
 
     // - handles null node
@@ -112,6 +210,9 @@ private:
     }
 
 public:
+    using iterator = general_tree_iterator<false>;
+    using const_iterator = general_tree_iterator<true>;
+
     /**
      * @brief Public node interface
      */
@@ -604,5 +705,16 @@ public:
     ~general_tree()
     {
         clear();
+    }
+
+    [[nodiscard]] iterator begin(iteration_type it_type = iteration_type::preorder)
+    {
+        private_node* pnode = get_initial_node_for_iteration(it_type);
+        return iterator(pnode, it_type);
+    }
+
+    [[nodiscard]] iterator end()
+    {
+        return iterator(nullptr);
     }
 };
