@@ -31,7 +31,7 @@ private:
         preorder
     };
 
-    private_node* get_initial_node_for_iteration(iteration_type it_type)
+    private_node* get_initial_node_for_iteration(iteration_type it_type) const
     {
         switch (it_type)
         {
