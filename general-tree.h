@@ -10,6 +10,12 @@ class general_tree
 public:
     class node;
 
+    enum class iteration_type
+    {
+        preorder,
+        postorder
+    };
+
 private:
     struct private_node
     {
@@ -23,12 +29,6 @@ private:
             : m_right_sibling(nullptr), m_left_child(nullptr), m_parent(nullptr), m_data(std::forward<Args>(args)...)
         {
         }
-    };
-
-    enum class iteration_type
-    {
-        postorder,
-        preorder
     };
 
     private_node* get_initial_node_for_iteration(iteration_type it_type) const
