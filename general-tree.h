@@ -37,6 +37,14 @@ private:
         {
         case iteration_type::preorder:
             return m_root;
+        case iteration_type::postorder:
+        {
+            private_node* current = m_root;
+            while (current->m_left_child != nullptr)
+                current = current->m_left_child;
+            return current;
+            break;
+        }
         default:
             throw std::invalid_argument("Not implemented");
         }
