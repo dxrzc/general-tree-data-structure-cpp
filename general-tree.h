@@ -57,11 +57,11 @@ private:
         using iterator_category = std::forward_iterator_tag;
         using value_type = T;
         using difference_type = std::ptrdiff_t;
+        using reference = std::conditional_t<is_const, const T&, T&>;
+        using pointer = std::conditional_t<is_const, const T*, T*>;
 
     private:
         using node_ptr = std::conditional_t<is_const, const private_node*, private_node*>;
-        using reference = std::conditional_t<is_const, const T&, T&>;
-        using pointer = std::conditional_t<is_const, const T*, T*>;
         node_ptr m_ptr;
         iteration_type m_iteration_type;
 
