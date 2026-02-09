@@ -735,9 +735,9 @@ public:
         return iterator(pnode, it_type);
     }
 
-    [[nodiscard]] iterator end()
+    [[nodiscard]] iterator end(iteration_type it_type = iteration_type::preorder)
     {
-        return iterator(nullptr);
+        return iterator(nullptr, it_type);
     }
 
     [[nodiscard]] const_iterator begin(iteration_type it_type = iteration_type::preorder) const
@@ -746,9 +746,9 @@ public:
         return const_iterator(pnode, it_type);
     }
 
-    [[nodiscard]] const_iterator end() const
+    [[nodiscard]] const_iterator end(iteration_type it_type = iteration_type::preorder) const
     {
-        return const_iterator(nullptr);
+        return const_iterator(nullptr, it_type);
     }
 
     [[nodiscard]] const_iterator cbegin(iteration_type it_type = iteration_type::preorder) const
