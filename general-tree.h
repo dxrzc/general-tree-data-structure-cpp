@@ -57,11 +57,11 @@ private:
         using iterator_category = std::forward_iterator_tag;
         using value_type = T;
         using difference_type = std::ptrdiff_t;
+        using reference = std::conditional_t<is_const, const T&, T&>;
+        using pointer = std::conditional_t<is_const, const T*, T*>;
 
     private:
         using node_ptr = std::conditional_t<is_const, const private_node*, private_node*>;
-        using reference = std::conditional_t<is_const, const T&, T&>;
-        using pointer = std::conditional_t<is_const, const T*, T*>;
         node_ptr m_ptr;
         iteration_type m_iteration_type;
 
@@ -127,13 +127,13 @@ private:
             return m_ptr->m_data;
         }
 
-        [[nodiscard]] bool operator==(const general_tree_iterator& other)
+        [[nodiscard]] bool operator==(const general_tree_iterator& other) const
         {
             return m_ptr == other.m_ptr;
         }
 
         // fixes reversed lookup ambiguity
-        [[nodiscard]] bool operator!=(const general_tree_iterator& other)
+        [[nodiscard]] bool operator!=(const general_tree_iterator& other) const
         {
             return m_ptr != other.m_ptr;
         }
@@ -735,9 +735,9 @@ public:
         return iterator(pnode, it_type);
     }
 
-    [[nodiscard]] iterator end()
+    [[nodiscard]] iterator end(iteration_type it_type = iteration_type::preorder)
     {
-        return iterator(nullptr);
+        return iterator(nullptr, it_type);
     }
 
     [[nodiscard]] const_iterator begin(iteration_type it_type = iteration_type::preorder) const
@@ -746,9 +746,9 @@ public:
         return const_iterator(pnode, it_type);
     }
 
-    [[nodiscard]] const_iterator end() const
+    [[nodiscard]] const_iterator end(iteration_type it_type = iteration_type::preorder) const
     {
-        return const_iterator(nullptr);
+        return const_iterator(nullptr, it_type);
     }
 
     [[nodiscard]] const_iterator cbegin(iteration_type it_type = iteration_type::preorder) const
