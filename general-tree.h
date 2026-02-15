@@ -102,7 +102,7 @@ private:
         }
 
     public:
-        explicit general_tree_iterator(
+        constexpr explicit general_tree_iterator(
             private_node* node_ptr = nullptr, iteration_type it_type = iteration_type::preorder
         )
             : m_ptr(node_ptr), m_iteration_type(it_type)
@@ -132,16 +132,15 @@ private:
             return m_ptr == other.m_ptr;
         }
 
-        // fixes reversed lookup ambiguity
-        [[nodiscard]] bool operator!=(const general_tree_iterator& other) const
-        {
-            return m_ptr != other.m_ptr;
-        }
-
         operator general_tree_iterator<true>() const
             requires(!is_const)
         {
             return general_tree_iterator<true>(m_ptr);
+        }
+
+        [[nodiscard]] pointer operator->() const noexcept
+        {
+            return std::addressof(operator*());
         }
     };
 
