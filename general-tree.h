@@ -132,12 +132,6 @@ private:
             return m_ptr == other.m_ptr;
         }
 
-        // fixes reversed lookup ambiguity
-        [[nodiscard]] bool operator!=(const general_tree_iterator& other) const
-        {
-            return m_ptr != other.m_ptr;
-        }
-
         operator general_tree_iterator<true>() const
             requires(!is_const)
         {
