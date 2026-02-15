@@ -137,6 +137,11 @@ private:
         {
             return general_tree_iterator<true>(m_ptr);
         }
+
+        [[nodiscard]] pointer operator->() const noexcept
+        {
+            return std::addressof(operator*());
+        }
     };
 
     private_node* m_root;
